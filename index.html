@@ -1,0 +1,821 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Valentine's Love Story</title>
+    <!-- Google Fonts for modern, clean look -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Poppins:wght@300;400;600&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      /* Reset and base styles */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: "Poppins", sans-serif;
+        background: linear-gradient(
+          135deg,
+          #ffb3ba,
+          #e6a4b4
+        ); /* Soft pink + lavender gradient */
+        color: #333;
+        overflow-x: hidden;
+        transition:
+          background 0.5s,
+          color 0.5s;
+        cursor: none; /* Hide default cursor for custom heart trail */
+      }
+      body.dark-mode {
+        background: linear-gradient(
+          135deg,
+          #2c3e50,
+          #34495e
+        ); /* Dark mode gradient */
+        color: #ecf0f1;
+      }
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+      /* Custom cursor heart trail */
+      .heart-trail {
+        position: absolute;
+        pointer-events: none;
+        font-size: 20px;
+        color: #e74c3c;
+        animation: fadeOut 1s forwards;
+      }
+      @keyframes fadeOut {
+        to {
+          opacity: 0;
+          transform: translateY(-20px);
+        }
+      }
+      /* Floating hearts animation */
+      .floating-heart {
+        position: absolute;
+        font-size: 24px;
+        color: #e74c3c;
+        animation: float 6s linear infinite;
+        pointer-events: none;
+      }
+      @keyframes float {
+        0% {
+          transform: translateY(100vh) rotate(0deg);
+          opacity: 1;
+        }
+        100% {
+          transform: translateY(-100px) rotate(360deg);
+          opacity: 0;
+        }
+      }
+      /* Landing page */
+      #landing {
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        position: relative;
+      }
+      #landing h1 {
+        font-family: "Dancing Script", cursive;
+        font-size: 3rem;
+        margin-bottom: 20px;
+        border-right: 2px solid #333;
+        white-space: nowrap;
+        overflow: hidden;
+        animation:
+          typing 4s steps(40, end),
+          blink-caret 0.75s step-end infinite;
+      }
+      body.dark-mode #landing h1 {
+        border-right-color: #ecf0f1;
+      }
+      @keyframes typing {
+        from {
+          width: 0;
+        }
+        to {
+          width: 100%;
+        }
+      }
+      @keyframes blink-caret {
+        from,
+        to {
+          border-color: transparent;
+        }
+        50% {
+          border-color: currentColor;
+        }
+      }
+      #romantic-gif {
+        width: 300px;
+        height: auto;
+        margin-top: 20px;
+        border-radius: 10px;
+      }
+      .cute-gif {
+        width: 220px;
+        margin-top: 15px;
+        border-radius: 12px;
+      }
+
+      /* Story section */
+      #story {
+        padding: 50px 0;
+      }
+      .chapter {
+        margin: 50px 0;
+        opacity: 0;
+        transform: translateY(50px);
+        transition:
+          opacity 1s,
+          transform 1s;
+      }
+      .chapter.visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      .chapter h2 {
+        font-family: "Dancing Script", cursive;
+        font-size: 2.5rem;
+        margin-bottom: 20px;
+        text-align: center;
+      }
+      .chapter p {
+        font-size: 1.2rem;
+        line-height: 1.6;
+        text-align: center;
+        max-width: 800px;
+        margin: 0 auto;
+      }
+      .heart-icon {
+        font-size: 2rem;
+        margin: 0 10px;
+        animation: pulse 2s infinite;
+      }
+      @keyframes pulse {
+        0%,
+        100% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.1);
+        }
+      }
+      /* Memory timeline */
+      #timeline {
+        padding: 50px 0;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 10px;
+        margin: 20px 0;
+      }
+      body.dark-mode #timeline {
+        background: rgba(0, 0, 0, 0.1);
+      }
+      .memory-card {
+        background: rgba(255, 255, 255, 0.8);
+        border-radius: 10px;
+        padding: 20px;
+        margin: 20px auto;
+        max-width: 600px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s;
+      }
+      body.dark-mode .memory-card {
+        background: rgba(255, 255, 255, 0.1);
+        color: #ecf0f1;
+      }
+      .memory-card:hover {
+        transform: scale(1.05);
+      }
+      .memory-card h3 {
+        font-family: "Dancing Script", cursive;
+        font-size: 1.5rem;
+        margin-bottom: 10px;
+      }
+      .memory-card p {
+        font-size: 1rem;
+      }
+      /* Music controls */
+      #music-controls {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 1000;
+      }
+      #mute-btn {
+        background: #e74c3c;
+        color: white;
+        border: none;
+        padding: 10px 15px;
+        border-radius: 50px;
+        cursor: pointer;
+        font-size: 1rem;
+        transition: background 0.3s;
+      }
+      #mute-btn:hover {
+        background: #c0392b;
+      }
+      /* Final section */
+      #final {
+        padding: 50px 0;
+        text-align: center;
+
+        position: relative; /* 👈 VERY IMPORTANT */
+      }
+
+      #final h2 {
+        font-family: "Dancing Script", cursive;
+        font-size: 3rem;
+        margin-bottom: 30px;
+      }
+      .button {
+        background: #e74c3c;
+        color: white;
+        border: none;
+        padding: 15px 30px;
+        border-radius: 50px;
+        font-size: 1.2rem;
+        margin: 0 10px;
+        cursor: pointer;
+        transition:
+          background 0.3s,
+          transform 0.3s;
+      }
+
+      .button:hover {
+        background: #c0392b;
+      }
+
+      .raj-btn {
+        background: #e74c3c;
+        color: white;
+        font-size: 0.75rem;
+        padding: 7px 16px;
+        border-radius: 50px;
+
+        opacity: 0.5;
+
+        position: absolute; /* 👈 inside #final */
+        right: -150px; /* 👉 pushes it to the side */
+        top: 87%; /* 👉 vertical control */
+
+        z-index: 10;
+        transition:
+          opacity 0.3s,
+          transform 0.3s;
+      }
+
+      .raj-btn:hover {
+        opacity: 1;
+        transform: scale(1.1);
+      }
+
+      #no-btn {
+        position: relative;
+      }
+      #no-btn:hover {
+        transform: translateX(100px);
+      }
+      #yes-btn {
+        transition: transform 0.5s ease;
+      }
+      /* Confetti animation */
+      .confetti {
+        position: absolute;
+        width: 10px;
+        height: 10px;
+        background: #e74c3c;
+        animation: fall 3s linear infinite;
+      }
+      @keyframes fall {
+        0% {
+          transform: translateY(-100vh) rotate(0deg);
+        }
+        100% {
+          transform: translateY(100vh) rotate(360deg);
+        }
+      }
+      /* Glowing hearts for YES */
+      .glowing-heart {
+        position: absolute;
+        font-size: 3rem;
+        color: #e74c3c;
+        animation: glow 2s infinite;
+      }
+      @keyframes glow {
+        0%,
+        100% {
+          opacity: 1;
+          transform: scale(1);
+        }
+        50% {
+          opacity: 0.5;
+          transform: scale(1.2);
+        }
+      }
+      /* Dark mode toggle */
+      #dark-mode-toggle {
+        position: fixed;
+        top: 20px;
+        left: 20px;
+        z-index: 1000;
+        background: #e74c3c;
+        color: white;
+        border: none;
+        padding: 10px 15px;
+        border-radius: 50px;
+        cursor: pointer;
+        font-size: 1rem;
+        transition: background 0.3s;
+      }
+      #dark-mode-toggle:hover {
+        background: #c0392b;
+      }
+      /* Responsive design */
+      @media (max-width: 768px) {
+        #landing h1 {
+          font-size: 2rem;
+        }
+        #romantic-gif {
+          width: 250px;
+        }
+        .chapter h2 {
+          font-size: 2rem;
+        }
+        .chapter p {
+          font-size: 1rem;
+        }
+        .memory-card {
+          padding: 15px;
+        }
+        #final h2 {
+          font-size: 2.5rem;
+        }
+        .button {
+          padding: 12px 25px;
+          font-size: 1rem;
+        }
+        .secret-btn {
+          background: #e74c3c;
+          color: white;
+          font-size: 0.7rem;
+          padding: 6px 14px;
+          opacity: 0.4;
+          position: absolute;
+          right: 20px;
+          bottom: -30px;
+        }
+        .secret-btn:hover {
+          opacity: 1;
+        }
+      }
+      /* YES POPUP */
+      .popup {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.6);
+        display: none;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+      }
+
+      .popup-box {
+        background: white;
+        border-radius: 20px;
+        padding: 25px;
+        width: 90%;
+        max-width: 800px;
+        animation: popIn 0.4s ease;
+        position: relative;
+      }
+
+      @keyframes popIn {
+        from {
+          transform: scale(0.7);
+          opacity: 0;
+        }
+        to {
+          transform: scale(1);
+          opacity: 1;
+        }
+      }
+
+      .close-btn {
+        position: absolute;
+        top: 10px;
+        right: 20px;
+        font-size: 28px;
+        cursor: pointer;
+      }
+
+      .popup-content {
+        display: flex;
+        gap: 20px;
+        align-items: center;
+      }
+
+      .popup-left {
+        flex: 1;
+        text-align: center;
+      }
+
+      .popup-left img {
+        max-width: 250px;
+        width: 100%;
+        border-radius: 15px;
+      }
+
+      .popup-text {
+        margin-top: 15px;
+        font-family: "Dancing Script", cursive;
+        font-size: 1.4rem;
+        color: #e74c3c;
+      }
+
+      .popup-right {
+        flex: 1;
+      }
+
+      .popup-right img {
+        width: 100%;
+        border-radius: 15px;
+        object-fit: cover;
+      }
+
+      @media (max-width: 768px) {
+        .popup-content {
+          flex-direction: column;
+        }
+      }
+      #love-video {
+        outline: none;
+      }
+      .close-btn {
+        z-index: 10001;
+        cursor: pointer;
+      }
+      .popup-right video {
+        pointer-events: none;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Dark mode toggle -->
+    <button id="dark-mode-toggle">Night Love Mode 🌙</button>
+
+    <!-- Music controls -->
+    <div id="music-controls">
+      <button id="mute-btn">Mute Music 🔇</button>
+    </div>
+
+    <!-- Landing page -->
+    <section id="landing">
+      <h1 id="typed-text"></h1>
+
+      <!-- Only ONE cute teddy GIF -->
+      <img id="romantic-gif" src="main gif.gif" alt="Cute Teddy Hug" />
+    </section>
+
+    <!-- Story section -->
+    <section id="story" class="container">
+      <div class="chapter" id="chapter1">
+        <h2>
+          Chapter 1: The Day You Became Special
+          <span class="heart-icon">❤️</span>
+        </h2>
+        <p>
+          From the moment we met, something magical happened. Your smile lit up
+          my world, and I knew you were the one.
+        </p>
+      </div>
+      <div class="chapter" id="chapter2">
+        <h2>
+          Chapter 2: Every Little Thing About You
+          <span class="heart-icon">💖</span>
+        </h2>
+        <p>
+          Your laugh, your kindness, the way you see the world – every detail
+          makes my heart skip a beat.
+        </p>
+      </div>
+      <div class="chapter" id="chapter3">
+        <h2>
+          Chapter 3: Why You Mean So Much to Me
+          <span class="heart-icon">💕</span>
+        </h2>
+        <p>
+          You've brought joy, love, and adventure into my life. Without you, my
+          world would be incomplete.
+        </p>
+      </div>
+      <div class="chapter" id="chapter4">
+        <h2>
+          Chapter 4: A Question From My Heart <span class="heart-icon">💞</span>
+        </h2>
+        <p>
+          As we journey through this story, I realize how deeply I care. You're
+          my everything.
+        </p>
+      </div>
+    </section>
+
+    <!-- Memory timeline -->
+    <section id="timeline" class="container">
+      <h2
+        style="
+          text-align: center;
+          font-family: &quot;Dancing Script&quot;, cursive;
+          font-size: 2.5rem;
+          margin-bottom: 30px;
+        "
+      >
+        Our Romantic Moments
+      </h2>
+      <div class="memory-card">
+        <h3>February 14, 2022</h3>
+        <p>
+          Our first Valentine's Day together – a walk in the park under the
+          stars.
+        </p>
+      </div>
+      <div class="memory-card">
+        <h3>June 15, 2022</h3>
+        <p>The day you surprised me with breakfast in bed. Pure magic!</p>
+      </div>
+      <div class="memory-card">
+        <h3>December 25, 2022</h3>
+        <p>Christmas cuddles by the fire, whispering sweet nothings.</p>
+      </div>
+    </section>
+
+    <!-- Final section -->
+    <section id="final" class="container">
+      <h2>Will you be my Valentine? 💖</h2>
+      <button class="button" id="yes-btn">YES</button>
+      <button class="button" id="no-btn">NO</button>
+      <button class="button raj-btn" id="raj-btn">Raj</button>
+
+      <p
+        id="response-message"
+        style="display: none; font-size: 1.5rem; margin-top: 20px"
+      ></p>
+    </section>
+
+    <!-- Audio for background music -->
+    <audio id="bg-music" loop>
+      <source
+        src="bgsound1normal.mpeg"
+        type="audio/wav"
+      />
+      <!-- Placeholder; replace with romantic music URL -->
+    </audio>
+
+    <!-- YES POPUP -->
+    <div id="yes-popup" class="popup">
+      <div class="popup-box">
+        <span class="close-btn">&times;</span>
+
+        <div class="popup-content">
+          <div class="popup-left">
+            <img
+              src="catt.webp"
+              alt="Cute Gif"
+            />
+            <p class="popup-text">
+              Agar mere pass duniya ki saari khusiyan hongi 🤌🏻✨❤️<br /><br />
+              Uss waqt bhi mujhe khwahish teri hi hogi :) 🫠❤️❤️
+            </p>
+          </div>
+
+          <div class="popup-right">
+            <video
+              id="love-video"
+              src="Box vidio.mp4"
+              loop
+              playsinline
+              style="width: 100%; border-radius: 15px"
+            ></video>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Typing animation for landing text
+      const text = "Hey love… I made this little world just for you ❤️";
+      const typedText = document.getElementById("typed-text");
+      let index = 0;
+      function typeWriter() {
+        if (index < text.length) {
+          typedText.innerHTML += text.charAt(index);
+          index++;
+          setTimeout(typeWriter, 100);
+        }
+      }
+      typeWriter();
+
+      // Floating hearts animation
+      function createFloatingHeart() {
+        const heart = document.createElement("div");
+        heart.className = "floating-heart";
+        heart.innerHTML = "❤️";
+        heart.style.left = Math.random() * 100 + "vw";
+        heart.style.animationDuration = Math.random() * 3 + 3 + "s";
+        document.body.appendChild(heart);
+        setTimeout(() => heart.remove(), 6000);
+      }
+      setInterval(createFloatingHeart, 1000);
+
+      // Scroll-based chapter fade-in
+      const chapters = document.querySelectorAll(".chapter");
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("visible");
+          }
+        });
+      });
+      chapters.forEach((chapter) => observer.observe(chapter));
+
+      // Music controls
+      const music = document.getElementById("bg-music");
+      const muteBtn = document.getElementById("mute-btn");
+      let isMuted = false;
+      muteBtn.addEventListener("click", () => {
+        isMuted = !isMuted;
+        music.muted = isMuted;
+        muteBtn.textContent = isMuted ? "Unmute Music 🔊" : "Mute Music 🔇";
+      });
+      music.play(); // Auto-play (may be blocked by browsers; user interaction required)
+
+      // Final section buttons
+      const yesBtn = document.getElementById("yes-btn");
+      const noBtn = document.getElementById("no-btn");
+      const responseMessage = document.getElementById("response-message");
+      const popup = document.getElementById("yes-popup");
+      const closeBtn = document.querySelector(".close-btn");
+
+      let yesScale = 1; // Initial scale for YES button
+
+      // Function to trigger YES effect
+      function triggerYesEffect() {
+        // Confetti effect
+        for (let i = 0; i < 100; i++) {
+          const confetti = document.createElement("div");
+          confetti.className = "confetti";
+          confetti.style.left = Math.random() * 100 + "vw";
+          confetti.style.animationDelay = Math.random() * 3 + "s";
+          document.body.appendChild(confetti);
+          setTimeout(() => confetti.remove(), 3000);
+        }
+        // Glowing hearts
+        for (let i = 0; i < 10; i++) {
+          const heart = document.createElement("div");
+          heart.className = "glowing-heart";
+          heart.innerHTML = "💖";
+          heart.style.left = Math.random() * 100 + "vw";
+          heart.style.top = Math.random() * 100 + "vh";
+          document.body.appendChild(heart);
+          setTimeout(() => heart.remove(), 4000);
+        }
+        responseMessage.textContent = "You just made my heart the happiest 💕";
+        responseMessage.style.display = "block";
+      }
+
+      yesBtn.addEventListener("click", () => {
+        popup.style.display = "flex";
+
+        // STOP background music
+        music.pause();
+        music.currentTime = 0;
+
+        // PLAY video with sound
+        const video = document.getElementById("love-video");
+        video.muted = false;
+        video.play().catch(() => {});
+
+        triggerYesEffect();
+      });
+
+      noBtn.addEventListener("mouseenter", () => {
+        const x = Math.random() * (window.innerWidth - noBtn.offsetWidth);
+        const y = Math.random() * (window.innerHeight - noBtn.offsetHeight);
+
+        noBtn.style.position = "fixed";
+        noBtn.style.left = x + "px";
+        noBtn.style.top = y + "px";
+      });
+
+      // Custom cursor heart trail
+      document.addEventListener("mousemove", (e) => {
+        const heart = document.createElement("div");
+        heart.className = "heart-trail";
+        heart.innerHTML = "💖";
+        heart.style.left = e.pageX + "px";
+        heart.style.top = e.pageY + "px";
+        document.body.appendChild(heart);
+        setTimeout(() => heart.remove(), 1000);
+      });
+
+      // Dark mode toggle
+      const darkModeToggle = document.getElementById("dark-mode-toggle");
+      darkModeToggle.addEventListener("click", () => {
+        document.body.classList.toggle("dark-mode");
+      });
+
+      closeBtn.addEventListener("click", () => {
+        popup.style.display = "none";
+
+        // STOP video
+        const video = document.getElementById("love-video");
+        video.pause();
+        video.currentTime = 0;
+
+        // RESUME background music
+        music.play().catch(() => {});
+      });
+
+      const rajBtn = document.getElementById("raj-btn");
+      const secretPopup = document.getElementById("secret-popup");
+      const secretClose = document.getElementById("secret-close");
+      const secretSubmit = document.getElementById("secret-submit");
+
+      // OPEN password box
+      document.addEventListener("DOMContentLoaded", () => {
+        const rajBtn = document.getElementById("raj-btn");
+        const secretPopup = document.getElementById("secret-popup");
+        const secretClose = document.getElementById("secret-close");
+        const secretSubmit = document.getElementById("secret-submit");
+
+        // OPEN password box
+        rajBtn.addEventListener("click", () => {
+          secretPopup.style.display = "flex";
+        });
+
+        // CLOSE popup
+        secretClose.addEventListener("click", () => {
+          secretPopup.style.display = "none";
+        });
+
+        // CHECK password
+        secretSubmit.addEventListener("click", () => {
+          const pass = document
+            .getElementById("secret-password")
+            .value.trim()
+            .toLowerCase();
+
+          if (pass === "linkedin") {
+            window.location.href = "secret.html";
+          } else {
+            alert("Oops… try again, sunshine 🌻");
+          }
+        });
+      });
+    </script>
+
+    <div id="secret-popup" class="popup">
+      <div class="popup-box">
+        <span class="close-btn" id="secret-close">×</span>
+
+        <h2
+          style="
+            font-family: &quot;Dancing Script&quot;, cursive;
+            color: #e74c3c;
+          "
+        >
+          Enter password, my sunshine 🌻
+        </h2>
+
+        <input
+          type="password"
+          id="secret-password"
+          placeholder="Type here..."
+          style="
+            margin-top: 20px;
+            padding: 12px;
+            width: 100%;
+            border-radius: 10px;
+            border: 1px solid #ccc;
+            font-size: 1rem;
+          "
+        />
+
+        <button class="button" style="margin-top: 20px" id="secret-submit">
+          Unlock 💖
+        </button>
+      </div>
+    </div>
+  </body>
+</html>
